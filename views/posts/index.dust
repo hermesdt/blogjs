@@ -1,0 +1,10 @@
+{>"layout" /}
+<p>Posts list:</p>
+{#posts}
+  <ul>
+    <li>{title}</li>
+  </ul>
+{:else}
+  <p>No posts available</p>
+{/posts}
+{> "posts/form" post=new_post /}

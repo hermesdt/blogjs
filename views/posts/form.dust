@@ -1,0 +1,12 @@
+<form action="/posts" method="post">
+  <input type="hidden" name="_csrf" value="{_locals._csrf}" />
+  <div>
+    <label for="post_title">Titulo</label>
+    <input type="text" id="post_title" name="post[title]" value="{post.title}"/>
+  </div>
+  <div>
+    <label for="post_body">Body</label>
+    <textarea id="post_body" name="post[body]" cols="100" rows="10">{post.body}</textarea>
+  </div>
+  <input type="submit" value="Send" />
+</form>

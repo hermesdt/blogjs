@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+<head>
+  <title>{+title}asdf{/title}</title>
+</head>
+<body>
+ {<bodyContent}
+ {/bodyContent}
+</body>
+</html>

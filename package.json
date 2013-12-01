@@ -7,9 +7,10 @@
   },
   "dependencies": {
     "express": "3.4.5",
-    "mongoose": "*",
-    "ejs": "*",
-    "ejs-locals": "*"
+    "mongoose": "3.8.1",
+    "dustjs-linkedin": "2.2.0",
+    "dustjs-helpers": "*",
+    "consolidate": "*"
   },
   "engines": {
     "node": "0.10.x",
