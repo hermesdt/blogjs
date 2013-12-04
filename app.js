@@ -4,7 +4,7 @@
  */
 
 var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/blogjs");
+mongoose.connect(process.env.MONGOLAB_URI || "mongodb://localhost/blogjs");
 var User = require("./models/user").User;
 
 var express = require('express');
