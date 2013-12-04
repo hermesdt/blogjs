@@ -1,0 +1,16 @@
+<form action="/users" method="post">
+  <input type="hidden" name="_csrf" value="{_locals._csrf}" />
+  <div>
+    <label for="user_email">Email</label>
+    <input type="text" name="user[email]" id="user_email" value="{user.email}" />
+    <p>{errors.errors.email.message}</p>
+  </div>
+  <div>
+    <label for="user_password">password</label>
+    <input type="text" name="user[password]" id="user_password" value="{user.password}" />
+    <p>{errors.errors.password.message}</p>
+  </div>
+  <div>
+    <input type="submit" value="Submit" />
+  </div>
+</form>

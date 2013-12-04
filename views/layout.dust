@@ -2,13 +2,23 @@
 <html>
 <head>
   <meta content="_csrf" name="csrf-param">
-  <meta content="{_locals._csrf}" name="csrf-token">
+  <meta content="{_csrf}" name="csrf-token">
   <script src="/javascripts/jquery.min.js" type="text/javascript"></script>
   <script src="/javascripts/rails.js" type="text/javascript"></script>
   <title>{+title}asdf{/title}</title>
 </head>
 <body>
- {<bodyContent}
- {/bodyContent}
+  <div id="header">
+    {#currentUser}
+      <a class="action" href="/blog/{id}">My Blog</a>
+      <a class="action" href="/sessions" data-method="delete">Sign Out</a>
+    {:else}
+      <a class="action" href="/sessions/new">Sign In</a>
+    {/currentUser}
+  </div>
+  <div id="content">
+    {<bodyContent}
+    {/bodyContent}
+  </div>
 </body>
 </html>

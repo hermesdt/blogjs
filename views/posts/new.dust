@@ -1,2 +1,3 @@
+{> "layout" /}
 <p>New Post:</p>
 {> "posts/form" post=post /}

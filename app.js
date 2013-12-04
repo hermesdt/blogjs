@@ -3,15 +3,19 @@
  * Module dependencies.
  */
 
+var mongoose = require("mongoose");
+mongoose.connect("mongodb://localhost/blogjs");
+var User = require("./models/user").User;
+
 var express = require('express');
 var routes = require('./routes');
-var user = require('./routes/user');
+var users = require('./routes/users');
+var sessions = require('./routes/sessions');
 var posts = require('./routes/posts');
 var flash = require('connect-flash');
 
 var http = require('http');
 var path = require('path');
-// var dust = require('dustjs-linkedin');
 var consolidate = require("consolidate");
 
 var app = express();
@@ -27,23 +31,18 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.cookieParser());
-app.use(flash());
-app.use(express.session({secret: "ñkl234ñkj234ñjkl23ñ4klj", key: "session"}));
+app.use(express.cookieParser("ñlkjasdjfskjfsf"));
+app.use(express.cookieSession({ secret: "heyhey!", key: "session", cookie: {maxAge: 365 * 24 * 60 * 60 * 1000}}));
 app.use(express.csrf());
+app.use(flash());
 app.use(function(req, res, next){
   res.locals._csrf = req.csrfToken();
-  next();
-});
 
-/*var loginFilter = function(req, res, next){
-  if(req.session.user_id){
-    User.findById id, function(err, user){
-      
-    });
-  } else {
-  }
-};*/
+  User.findById(req.session.user_id, function(err, user){
+    res.locals.currentUser = user;
+    next();
+  });
+});
 
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -53,12 +52,36 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
+var loginFilter = function (req, res, next){
+  if(res.locals.currentUser){
+    next();
+  }else{
+    req.flash("info", "Not logged in");
+    res.redirect("/");
+  }
+};
+var redirectIfLoggedIn = function(req, res, next){
+  if(res.locals.currentUser){
+    req.flash("info", "Already logged in");
+    res.redirect("/");
+  }else{
+    next();
+  }
+}
+
 app.get('/', routes.index);
-app.get('/users', user.list);
-app.get('/posts', posts.index);
+
+app.get('/users/new', redirectIfLoggedIn, users.new);
+app.post('/users', users.create);
+
+app.get('/sessions/new', redirectIfLoggedIn, sessions.new);
+app.post('/sessions', redirectIfLoggedIn, sessions.create);
+app.delete('/sessions', loginFilter, sessions.destroy);
+
+app.get('/posts', loginFilter, posts.index);
 app.post('/posts', posts.create);
 app.get('/posts/new', posts.new);
-app.delete('/posts/:id', posts.destroy);
+app.delete('/posts/:id', loginFilter, posts.destroy);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
