@@ -1,4 +1,11 @@
 {> "layout" /}
 {<title}{title}{/title}
-asdf
 
+{?users}
+  <p>blogs:</p>
+  <ul>
+    {#users}
+      <li><a href="/blog/{id}/posts">Posts</a> ({email})</li>
+    {/users}
+  </ul>
+{/users}

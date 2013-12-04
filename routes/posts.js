@@ -1,9 +1,18 @@
 var Post = require("../models/post").Post;
 
+exports.checkAuthorized = function (req, res, next){
+  if(req.params.user_id == req.session.user_id){
+    next();
+  }else{
+    console.log("filtered at checkauthorized. redirected to /");
+    res.redirect("/");
+  }
+};
+
 /* GET /posts */
 exports.index = function(req, res){
-  Post.find({}, function(err, docs){
-    res.render('posts/index', {posts: docs});
+  Post.find({author_id: req.params.user_id}, function(err, docs){
+    res.render('posts/index', {posts: docs, user_id: req.params.user_id});
   });
 };
 
@@ -14,14 +23,16 @@ exports.new = function(req, res){
 
 /* POST /posts */
 exports.create = function(req, res){
-  var _post = new Post(req.body.post);
+  var params = req.body.post;
+  params.author_id = req.session.user_id;
+  var _post = new Post(params);
 
   _post.save(function(err, post, numberAffected){
     res_data = {};
     if(err){
       res.render('posts/new', {post: _post, errors: err});
     }else{
-      res.redirect("/posts");
+      res.redirect("/blog/"+req.session.user_id+"/posts");
     }
   });
 };
@@ -38,7 +49,8 @@ exports.destroy = function(req, res){
     }else if(post){
       post.remove(function(err, post){
         if(err) handleError(err);
-        else res.redirect("/posts");
+        else
+          res.redirect("/blog/"+req.session.user_id+"/posts");
       });
     }else{
       res.send(500);

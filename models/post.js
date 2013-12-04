@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var postSchema = new Schema({
   title:  {type: String, required: true},
   body:   {type: String, required: true},
+  author_id: {type: Schema.Types.ObjectId, required: true },
   comments: [{ body: String, date: Date }],
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }

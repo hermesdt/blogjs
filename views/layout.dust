@@ -10,10 +10,13 @@
 <body>
   <div id="header">
     {#currentUser}
-      <a class="action" href="/blog/{id}">My Blog</a>
+      Welcome {currentUser.email}
+      <a class="action" href="/">Home</a>
+      <a class="action" href="/blog/{id}/posts">My Blog</a>
       <a class="action" href="/sessions" data-method="delete">Sign Out</a>
     {:else}
       <a class="action" href="/sessions/new">Sign In</a>
+      <a class="action" href="/users/new">Sign Up</a>
     {/currentUser}
   </div>
   <div id="content">

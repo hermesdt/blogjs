@@ -1,3 +1,5 @@
+{>"layout" /}
+
 <form action="/sessions" method="post">
   <input type="hidden" name="_csrf" value="{_csrf}" />
   <div>

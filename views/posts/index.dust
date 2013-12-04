@@ -2,9 +2,20 @@
 <p>Posts list:</p>
 {#posts}
   <ul>
-    <li>{title} <a href="/posts/{_id}" data-method="delete">Destroy</a></li>
+    <li>
+      <p>
+        {title}
+        {@eq key=user_id value=currentUser.id}
+          <a href="/blog/{currentUser.id}/posts/{id}" data-method="delete">Destroy</a>
+        {/eq}
+      </p>
+      <p>{body}</p>
+    </li>
   </ul>
 {:else}
   <p>No posts available</p>
 {/posts}
-<a href="/posts/new">New post</a>
+
+{@eq key=user_id value=currentUser.id}
+<a href="/blog/{currentUser.id}/posts/new">New post</a>
+{/eq}

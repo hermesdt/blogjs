@@ -78,10 +78,10 @@ app.get('/sessions/new', redirectIfLoggedIn, sessions.new);
 app.post('/sessions', redirectIfLoggedIn, sessions.create);
 app.delete('/sessions', loginFilter, sessions.destroy);
 
-app.get('/posts', loginFilter, posts.index);
-app.post('/posts', posts.create);
-app.get('/posts/new', posts.new);
-app.delete('/posts/:id', loginFilter, posts.destroy);
+app.get('/blog/:user_id/posts', posts.index);
+app.post('/blog/:user_id/posts', loginFilter, posts.checkAuthorized, posts.create);
+app.get('/blog/:user_id/posts/new', loginFilter, posts.checkAuthorized, posts.new);
+app.delete('/blog/:user_id/posts/:id', loginFilter, posts.checkAuthorized, posts.destroy);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
