@@ -2,12 +2,14 @@ var Post = require("../models/post").Post;
 
 /* GET /posts */
 exports.index = function(req, res){
-  var new_post = new Post({title: "Nuevo"});
   Post.find({}, function(err, docs){
-    res.render('posts/index', {posts: docs, new_post: new_post});
+    res.render('posts/index', {posts: docs});
   });
+};
 
-  // res.render('posts/index', {posts: Post.find({}), new_post: new_post});
+exports.new = function(req, res){
+  var post = new Post({});
+  res.render('posts/new', {post: post});
 };
 
 /* POST /posts */
@@ -17,11 +19,29 @@ exports.create = function(req, res){
   _post.save(function(err, post, numberAffected){
     res_data = {};
     if(err){
-      Post.find({}, function(err, docs){
-        res.render('posts/index', {posts: docs, new_post: _post});
-      });
+      res.render('posts/new', {post: _post, errors: err});
     }else{
       res.redirect("/posts");
+    }
+  });
+};
+
+/* DELETE */
+exports.destroy = function(req, res){
+  var handleError = function (err){
+    res.write(err);
+  };
+
+  Post.findById(req.params.id, function(err, post){
+    if(err){
+      handleError(err);
+    }else if(post){
+      post.remove(function(err, post){
+        if(err) handleError(err);
+        else res.redirect("/posts");
+      });
+    }else{
+      res.send(500);
     }
   });
 };

@@ -9,8 +9,10 @@
     "express": "3.4.5",
     "mongoose": "3.8.1",
     "dustjs-linkedin": "2.2.0",
-    "dustjs-helpers": "*",
-    "consolidate": "*"
+    "dustjs-helpers": "1.1.1",
+    "consolidate": "0.10.0",
+    "connect-flash": "0.1.1",
+    "passport": "0.1.17"
   },
   "engines": {
     "node": "0.10.x",
