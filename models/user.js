@@ -12,10 +12,10 @@ function generateDerivedKey(password, salt, fn){
 }
 
 var userSchema = new Schema({
-  email: {type: String, require: true, index: {unique: true}, validate: /@/},
+  email: {type: String, required: true, index: {unique: true}, validate: /@/},
   password: {type: String},
-  encryptedPassword: {type: String, require: true},
-  salt: {type: String, require: true},
+  encryptedPassword: {type: String, required: false},
+  salt: {type: String, required: false},
   created_at: { type: Date, default: Date.now },
   updated_at: { type: Date, default: Date.now }
 });
@@ -29,11 +29,17 @@ userSchema.pre("save", function(next){
   next();
 });
 
-userSchema.post("save", function(user){
-  if(user.salt == undefined){
-    user.generatePassword(this.password, function(err, user){
-      console.log("password generated for user: "+user.id);
+userSchema.pre("save", function(next){
+  var self = this;
+  if(this.salt == undefined && this.password != undefined){
+    this.generatePassword(this.password, function(err){
+      // console.log("password generated for user: "+self.id);
+
+      if(err) next(err);
+      next();
     });
+  }else{
+    next();
   }
 });
 
@@ -42,7 +48,7 @@ userSchema.methods.generatePassword = function(password, fn){
   self.salt = generateSalt();
   generateDerivedKey(password, self.salt, function(err, derivedKey){
     self.encryptedPassword = derivedKey.toString("base64");
-    self.save(fn);
+    fn(err);
   });
 };
 
