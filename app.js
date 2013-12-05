@@ -39,6 +39,7 @@ app.use(express.csrf());
 app.use(flash());
 app.use(function(req, res, next){
   res.locals._csrf = req.csrfToken();
+  res.setHeader("X-CSRF-TOKEN", res.locals._csrf);
 
   User.findById(req.session.user_id, function(err, user){
     res.locals.currentUser = user;
@@ -88,3 +89,5 @@ app.delete('/blog/:user_id/posts/:id', loginFilter, posts.checkAuthorized, posts
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
+
+exports.app = app;
